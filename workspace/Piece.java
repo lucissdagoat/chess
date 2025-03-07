@@ -50,7 +50,31 @@ public class Piece {
     //return a list of every square that is "controlled" by this piece. A square is controlled
     //if the piece capture into it legally.
     public ArrayList<Square> getControlledSquares(Square[][] board, Square start) {
-     return null;
+      ArrayList<Square> control = new ArrayList<Square>();
+      if((start.getRow() + start.getCol()) % 2 == 0)
+      {
+      //white
+      if(start.getCol()+1<8){
+        control.add(board[start.getRow()][start.getCol()+1]);
+    }
+    if(start.getCol()>0){
+      control.add(board[start.getRow()][start.getCol()-1]);
+    }
+  }
+  else{
+    if(start.getRow()+1<8){
+      control.add(board[start.getRow()+1][start.getCol()]);
+    }
+      if(start.getCol()>0){
+        control.add(board[start.getRow()-1][start.getCol()]);
+  }
+}
+if(control.size()>0){
+  return control;
+}
+  else{
+  return null;
+}
     }
     
 
@@ -61,6 +85,61 @@ public class Piece {
     //please note that your piece must have some sort of logic. Just being able to move to every square on the board is not
     //going to score any points.
     public ArrayList<Square> getLegalMoves(Board b, Square start){
+      ArrayList<Square> moves = new ArrayList<Square>();
+      
+      
+      if((start.getRow() + start.getCol()) % 2 == 0)
+      {
+      //white
+      if(start.getCol()+1<8){
+        if(b.getSquareArray()[start.getRow()][start.getCol()+1].isOccupied()){
+          if(b.getSquareArray()[start.getRow()][start.getCol()+1].getOccupyingPiece().getColor() != color){
+          moves.add(b.getSquareArray()[start.getRow()][start.getCol()+1]);
+          }
+        }
+        else{
+          moves.add(b.getSquareArray()[start.getRow()][start.getCol()+1]);
+        }
+      }
+      if(start.getCol()>0){
+          if(b.getSquareArray()[start.getRow()][start.getCol()-1].isOccupied()){
+            if(b.getSquareArray()[start.getRow()][start.getCol()-1].getOccupyingPiece().getColor() != color){
+            moves.add(b.getSquareArray()[start.getRow()][start.getCol()-1]);
+            }
+          }
+          else{
+      moves.add(b.getSquareArray()[start.getRow()][start.getCol()-1]);
+          }
+      }
+
+    }
+    else{
+      if(start.getRow()+1<8){
+        if(b.getSquareArray()[start.getRow()+1][start.getCol()].isOccupied()){
+          if(b.getSquareArray()[start.getRow()+1][start.getCol()].getOccupyingPiece().getColor() != color){
+          moves.add(b.getSquareArray()[start.getRow()+1][start.getCol()]);
+          }
+        }
+        else{
+          moves.add(b.getSquareArray()[start.getRow()+1][start.getCol()]);
+        }
+      }
+      if(start.getRow()>0){
+        if(b.getSquareArray()[start.getRow()-1][start.getCol()].isOccupied()){
+          if(b.getSquareArray()[start.getRow()-1][start.getCol()].getOccupyingPiece().getColor() != color){
+          moves.add(b.getSquareArray()[start.getRow()-1][start.getCol()]);
+          }
+        }
+        else{
+          moves.add(b.getSquareArray()[start.getRow()-1][start.getCol()]);
+        }
+      }
+    }
+    if(moves.size()>0){
+      return moves;
+    }
+      else{
     	return null;
     }
+  }
 }
