@@ -1,4 +1,8 @@
-
+//Lucas Brenowitz
+//3/26
+//This piece will move differently if it is on a black square or a white square. 
+    //if its on a black square it will be able to move forward or backwards one square and capture in those squares
+    //if its on a white square it will be able to move left or right one sqaure and can capture in those squares. 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
