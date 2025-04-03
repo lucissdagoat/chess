@@ -92,13 +92,55 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 	//it's up to you how you wish to arrange your pieces.
     private void initializePieces() {
     	
-    	board[0][4].put(new Piece(true, RESOURCES_WKING_PNG));
-        board[7][4].put(new Piece(false, RESOURCES_BKING_PNG));
-        board[7][3].put(new Piece(false, RESOURCES_BKING_PNG));
+    	board[1][0].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[1][1].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[1][2].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[1][3].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[1][4].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[1][5].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[1][6].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[1][7].put(new Servant(true, RESOURCES_WKING_PNG));
+        board[6][0].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[6][1].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[6][2].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[6][3].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[6][4].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[6][5].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[6][6].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[6][7].put(new Servant(false, RESOURCES_BKING_PNG));
+        board[0][3].put(new King(true, RESOURCES_WKING_PNG));
+        board[7][4].put(new King(false, RESOURCES_BKING_PNG));
+        board[0][0].put(new Rook(true, RESOURCES_WROOK_PNG));
+        board[7][0].put(new Rook(false, RESOURCES_BROOK_PNG));
+        board[0][7].put(new Rook(true, RESOURCES_WROOK_PNG));
+        board[7][7].put(new Rook(false, RESOURCES_BROOK_PNG));
 
 
     }
+//precondition - the board is initialized and contains a king of either color. The boolean kingColor corresponds to the color of the king we wish to know the status of.
+          //postcondition - returns true of the king is in check and false otherwise.
+          public boolean isInCheck(boolean kingColor){
+            ArrayList<Square> controlled = new ArrayList<Square>();
+		for(int i = 0;i<8;i++){
+            for( int j=0;j<8;j++){
+                if(board[i][j].isOccupied() && board[i][j].getOccupyingPiece().getColor() != kingColor){
+                    ArrayList<Square> place =  board[i][j].getOccupyingPiece().getControlledSquares(board, board[i][j]);
+                    for (Square ask: place){
+                        if(ask.getOccupyingPiece() instanceof King && ask.getOccupyingPiece().getColor() == kingColor){
+                            return true;
+                        }
+                    }
+                        
+                    }
+                   
+                }
 
+            }
+            return false;
+        }
+        
+
+          
     public Square[][] getSquareArray() {
         return this.board;
     }
@@ -107,7 +149,7 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         return whiteTurn;
     }
 
-    public void setCurrPiece(Piece p) {
+    public void setCurrPiece(Servant p) {
         this.currPiece = p;
     }
 
@@ -166,13 +208,32 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         Square endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
         ArrayList<Square> hold = new ArrayList<Square>();
         hold = currPiece.getLegalMoves(this, fromMoveSquare);
-        int check = 0;
+        Piece old; // = new Piece(whiteTurn, "bking.png")
         for(Square i:hold){
             if(i == endSquare){
+            if(endSquare.isOccupied()){
+                 old = endSquare.getOccupyingPiece();
+                 endSquare.put(currPiece);
+                 fromMoveSquare.put(null);
+                 if(isInCheck(whiteTurn)){
+                    fromMoveSquare.put(currPiece);
+                     endSquare.put(old);
+                   }else{
+                       whiteTurn= !whiteTurn;
+                   }
+                //    break;
+            }else{
             endSquare.put(currPiece);
             fromMoveSquare.put(null);
-            whiteTurn= !whiteTurn;
-            check++;
+
+            if(isInCheck(whiteTurn)){
+                fromMoveSquare.put(currPiece);
+                 endSquare.put(null);
+               }
+               else{
+                   whiteTurn = !whiteTurn;
+               }
+            }
             }
         }
         
